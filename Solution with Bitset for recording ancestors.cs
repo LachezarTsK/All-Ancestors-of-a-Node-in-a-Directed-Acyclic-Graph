@@ -9,15 +9,15 @@ public class Solution
     public IList<IList<int>> GetAncestors(int numberOfNodes, int[][] edges)
     {
         this.numberOfNodes = numberOfNodes;
-        int[] incomingEdgesPerNode = createArrayIncomingEdgesPerNode(edges);
-        IList<int>[] directedAcyclicGraph = createDirectedAcyclicGraph(edges);
+        int[] incomingEdgesPerNode = CreateArrayIncomingEdgesPerNode(edges);
+        IList<int>[] directedAcyclicGraph = CreateDirectedAcyclicGraph(edges);
 
-        return findAncestorsPerNodeWithTopologicalSort(directedAcyclicGraph, incomingEdgesPerNode);
+        return FindAncestorsPerNodeWithTopologicalSort(directedAcyclicGraph, incomingEdgesPerNode);
     }
 
-    private IList<IList<int>> findAncestorsPerNodeWithTopologicalSort(IList<int>[] directedAcyclicGraph, int[] incomingEdgesPerNode)
+    private IList<IList<int>> FindAncestorsPerNodeWithTopologicalSort(IList<int>[] directedAcyclicGraph, int[] incomingEdgesPerNode)
     {
-        Queue<int> queue = createQueueNodesWithoutIncomingEdges(incomingEdgesPerNode);
+        Queue<int> queue = CreateQueueNodesWithoutIncomingEdges(incomingEdgesPerNode);
         BitArray[] ancestors = new BitArray[numberOfNodes];
         for (int nodeID = 0; nodeID < numberOfNodes; ++nodeID)
         {
@@ -30,17 +30,17 @@ public class Solution
 
             foreach (int next in directedAcyclicGraph[current])
             {
-                updateAncestors(current, next, ancestors);
+                UpdateAncestors(current, next, ancestors);
                 if (--incomingEdgesPerNode[next] == 0)
                 {
                     queue.Enqueue(next);
                 }
             }
         }
-        return createListAllAncestorsPerNode(ancestors);
+        return CreateListAllAncestorsPerNode(ancestors);
     }
 
-    private int[] createArrayIncomingEdgesPerNode(int[][] edges)
+    private int[] CreateArrayIncomingEdgesPerNode(int[][] edges)
     {
         int[] incomingEdgesPerNode = new int[numberOfNodes];
         foreach (int[] edge in edges)
@@ -51,7 +51,7 @@ public class Solution
         return incomingEdgesPerNode;
     }
 
-    private IList<int>[] createDirectedAcyclicGraph(int[][] edges)
+    private IList<int>[] CreateDirectedAcyclicGraph(int[][] edges)
     {
         IList<int>[] directedAcyclicGraph = new List<int>[numberOfNodes];
         for (int nodeID = 0; nodeID < numberOfNodes; ++nodeID)
@@ -68,7 +68,7 @@ public class Solution
         return directedAcyclicGraph;
     }
 
-    private Queue<int> createQueueNodesWithoutIncomingEdges(int[] incomingEdgesPerNode)
+    private Queue<int> CreateQueueNodesWithoutIncomingEdges(int[] incomingEdgesPerNode)
     {
         Queue<int> queue = new Queue<int>();
         for (int nodeID = 0; nodeID < numberOfNodes; ++nodeID)
@@ -81,7 +81,7 @@ public class Solution
         return queue;
     }
 
-    private IList<IList<int>> createListAllAncestorsPerNode(BitArray[] ancestors)
+    private IList<IList<int>> CreateListAllAncestorsPerNode(BitArray[] ancestors)
     {
         IList<IList<int>> allAncestorsPerNode = new List<IList<int>>();
 
@@ -101,7 +101,7 @@ public class Solution
         return allAncestorsPerNode;
     }
 
-    private void updateAncestors(int current, int next, BitArray[] ancestors)
+    private void UpdateAncestors(int current, int next, BitArray[] ancestors)
     {
         ancestors[next].Or(ancestors[current]);
         ancestors[next].Set(current, true);
